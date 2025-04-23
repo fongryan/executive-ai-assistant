@@ -1,3 +1,8 @@
+import eaia.async_patch  # Apply patches early
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 """Overall agent."""
 import json
 from typing import TypedDict, Literal

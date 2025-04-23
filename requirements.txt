@@ -1,0 +1,12 @@
+# Core requirements for Executive AI Assistant
+pydantic>=2.0
+python-dotenv
+aiofiles>=23.2.1
+tiktoken>=0.6.0 # Added for tokenizer preloading
+langgraph
+langgraph-sdk
+beautifulsoup4
+bs4
+lxml
+# Add all other required packages here
+# (This is a minimal addition; please add your other dependencies as needed)

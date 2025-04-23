@@ -1,0 +1,7 @@
+2025-04-23 BlockingError: Blocking call to os.getcwd (via tempfile/tiktoken/langchain) in async LangGraph/ASGI context. Fixed by monkey-patching os.getcwd in eaia/async_patch.py and importing at script entrypoint.
+
+2025-04-23 LangChainDeprecationWarning: Updated deprecated import from langchain_core.pydantic_v1 to direct pydantic import in eaia/gmail.py. LangChain now uses pydantic v2 internally.
+
+2025-04-23 TypeError: unhashable type: 'dict' in scripts/run_ingest.py. Fixed by properly storing the result of get_config() before accessing its keys.
+
+2025-04-23 bs4.exceptions.FeatureNotFound: Couldn't find a tree builder with the features you requested: lxml. - Resolved by adding `lxml` to `requirements.txt` and running `pip install -r requirements.txt`.

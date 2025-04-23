@@ -14,5 +14,9 @@
       "embed": "openai:text-embedding-3-small",
       "dims": 1536
     }
+  },
+  "Config": {
+    "support_async": true,
+    "blocking_handling": "thread"
   }
 }

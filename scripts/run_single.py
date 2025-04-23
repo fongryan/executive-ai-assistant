@@ -1,5 +1,9 @@
 """Script for testing a single run through an agent."""
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 import asyncio
 from langgraph_sdk import get_client
 import uuid

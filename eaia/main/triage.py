@@ -10,7 +10,7 @@ from eaia.schemas import (
     RespondTo,
 )
 from eaia.main.fewshot import get_few_shot_examples
-from eaia.main.config import get_config
+from eaia.main.config import get_config_async
 
 
 triage_prompt = """You are {full_name}'s executive assistant. You are a top-notch executive assistant who cares about {name} performing as well as possible.
@@ -44,10 +44,22 @@ Subject: {subject}
 
 
 async def triage_input(state: State, config: RunnableConfig, store: BaseStore):
+    """Triage input with improved async handling to prevent blocking operations."""
+    import asyncio
+
+    # Use async versions of operations and wrap any potentially blocking code
     model = config["configurable"].get("model", "gpt-4o")
-    llm = ChatOpenAI(model=model, temperature=0)
+    
+    # Initialize LLM with proper async settings
+    llm = ChatOpenAI(model=model, temperature=0, streaming=False)
+    
+    # Get examples asynchronously
     examples = await get_few_shot_examples(state["email"], store, config)
-    prompt_config = get_config(config)
+    
+    # Get config using our async-safe function
+    prompt_config = await get_config_async(config)
+    
+    # Format prompt (string operations are usually fast enough)
     input_message = triage_prompt.format(
         email_thread=state["email"]["page_content"],
         author=state["email"]["from_email"],
@@ -61,11 +73,18 @@ async def triage_input(state: State, config: RunnableConfig, store: BaseStore):
         triage_email=prompt_config["triage_email"],
         triage_notify=prompt_config["triage_notify"],
     )
+    
+    # Set up the model with structured output 
     model = llm.with_structured_output(RespondTo).bind(
         tool_choice={"type": "function", "function": {"name": "RespondTo"}}
     )
+    
+    # Make async API call
     response = await model.ainvoke(input_message)
+    
+    # Process response
     if len(state["messages"]) > 0:
+        # List comprehension is fast, no need to offload
         delete_messages = [RemoveMessage(id=m.id) for m in state["messages"]]
         return {"triage": response, "messages": delete_messages}
     else:

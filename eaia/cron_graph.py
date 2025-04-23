@@ -1,3 +1,8 @@
+import eaia.async_patch # Apply patches early
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 from typing import TypedDict
 from eaia.gmail import fetch_group_emails
 from langgraph_sdk import get_client

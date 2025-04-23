@@ -1,0 +1,55 @@
+# .rules
+
+- `eaia/async_patch.py`: Monkey-patches `os.getcwd` to avoid BlockingError in async environments (LangGraph/ASGI) due to synchronous calls from dependencies (e.g., tiktoken/langchain/tempfile). All async entrypoints/scripts must import this first.
+- Method signature: `_patched_getcwd(*args, **kwargs) -> str`
+- TODO: Remove/refactor this patch if upstream dependencies become async-safe.
+
+
+## Project Tenets
+- All env vars (OPENAI_API_KEY, ANTHROPIC_API_KEY, etc.) must be loaded from .env via python-dotenv at startup.
+- All imports must be alphabetized and clean.
+- Each method and class must be documented in .docs.
+- requirements.txt must always be up to date.
+  - Current key dependencies: python-dotenv, beautifulsoup4, lxml, langgraph, langgraph-sdk
+- Modularize and split up large files as needed.
+- Track all changes in README, .roadmap, and .rules.
+
+## File Structure
+- eaia/main/config.py: Loads config and ensures env vars are loaded from .env
+- scripts/run_ingest.py: Script to fetch and ingest emails into the LangGraph assistant.
+- requirements.txt: Must include python-dotenv, beautifulsoup4, lxml
+- README.md: Must document env var setup and troubleshooting
+- .roadmap: Tracks project status and PR FAQ
+
+## Dependencies (`requirements.txt`)
+*   `python-dotenv`: Loading environment variables from `.env` files.
+*   `beautifulsoup4` / `bs4`: Parsing HTML and XML documents.
+*   `lxml`: Fast and feature-rich XML and HTML parser (used by BeautifulSoup).
+*   `langgraph`: Building stateful, multi-actor applications with LLMs.
+*   `langgraph-sdk`: SDK for LangGraph.
+
+## Method Signatures
+- schemas.py:
+  - RespondTo(logic: str = "", response: Literal["no", "email", "notify", "question"] = "no") -> RespondTo
+  - ResponseEmailDraft(content: str, new_recipients: List[str]) -> ResponseEmailDraft
+  - NewEmailDraft(content: str, recipients: List[str]) -> NewEmailDraft
+  - ReWriteEmail(tone_logic: str, rewritten_content: str) -> ReWriteEmail
+  - Question(content: str) -> Question
+  - Ignore(ignore: bool) -> Ignore
+  - MeetingAssistant(call: bool) -> MeetingAssistant
+  - SendCalendarInvite(emails: List[str], title: str, start_time: str, end_time: str) -> SendCalendarInvite
+- config.py: get_config(config: dict) -> dict
+  - Loads config from either the provided dict or config.yaml
+- scripts/run_ingest.py:
+  - main(url: Optional[str], minutes_since: int, gmail_token: Optional[str], gmail_secret: Optional[str], early: bool, rerun: bool, email: Optional[str]) -> None
+  - Fetches emails using eaia.gmail.fetch_group_emails and ingests them into the specified LangGraph assistant URL.
+  - Uses BeautifulSoup to parse HTML and prints key fields (From, To, Subject, Sent, Content (parsed text)) for debugging.
+  - TODO: Add print statement for debugging fetched emails (Done 2025-04-23).
+
+## TODOs
+- [x] Add dotenv support to config.py
+- [x] Update README and requirements.txt for dotenv and troubleshooting
+- [x] Migrate all schema models to Pydantic V2 (BaseModel/Field)
+- [ ] Continue modularizing and documenting codebase
+
+(Keep this file updated with every change)

@@ -1,6 +1,14 @@
+import eaia.async_patch  # Apply patches early
+import sys
+sys.path.insert(0, "./eaia")  # Ensure local imports are prioritized
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 import argparse
 import asyncio
 from typing import Optional
+from bs4 import BeautifulSoup
 from eaia.gmail import fetch_group_emails
 from eaia.main.config import get_config
 from langgraph_sdk import get_client
@@ -19,7 +27,8 @@ async def main(
     email: Optional[str] = None,
 ):
     if email is None:
-        email_address = get_config({"configurable": {}})["email"]
+        config = {"configurable": {}}
+        email_address = get_config(config)["email"]
     else:
         email_address = email
     if url is None:
@@ -36,6 +45,20 @@ async def main(
         gmail_token=gmail_token,
         gmail_secret=gmail_secret,
     ):
+        print("--- Processing Email --- ")
+        print(f"From: {email.get('from_email', 'N/A')}")
+        print(f"To: {email.get('to_email', 'N/A')}")
+        print(f"Subject: {email.get('subject', 'N/A')}")
+        print(f"Sent: {email.get('send_time', 'N/A')}")
+        page_content = email.get('page_content', '')
+        if page_content:
+            soup = BeautifulSoup(page_content, 'lxml')
+            text_content = soup.get_text(separator=' ', strip=True)
+        else:
+            text_content = ""
+        print(f"Content:\n{text_content[:1000]}...") # Print first 1000 chars of parsed text content
+        print("-------------------------")
+
         thread_id = str(
             uuid.UUID(hex=hashlib.md5(email["thread_id"].encode("UTF-8")).hexdigest())
         )

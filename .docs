@@ -1,0 +1,55 @@
+# .docs
+
+## async_patch.py
+
+Monkey-patches `os.getcwd` to be async-safe for LangGraph/ASGI. Required because tiktoken/langchain/tempfile may call `os.getcwd` synchronously, which raises BlockingError in async event loops. Usage: Import at the top of async entrypoints/scripts.
+
+- Method: `_patched_getcwd(*args, **kwargs) -> str`
+- Troubleshooting: If you see BlockingError for os.getcwd, ensure this patch is loaded before any other imports.
+
+
+## Method/Class Documentation
+
+### eaia/main/config.py
+- get_config(config: dict) -> dict
+  - Loads configuration from the provided dict or from config.yaml.
+  - Loads environment variables from .env at import time using python-dotenv.
+
+### scripts/run_ingest.py
+- main(url: Optional[str] = None, minutes_since: int = 60, gmail_token: Optional[str] = None, gmail_secret: Optional[str] = None, early: bool = True, rerun: bool = False, email: Optional[str] = None) -> None:
+  - Asynchronous function to fetch emails and ingest them into a LangGraph assistant.
+  - Parameters:
+    - url: Optional[str]. The URL of the LangGraph assistant instance (defaults to http://127.0.0.1:2024).
+    - minutes_since: int. Fetch emails received within this many minutes (default 60).
+    - gmail_token: Optional[str]. Path to the Gmail API token file.
+    - gmail_secret: Optional[str]. Path to the Gmail API credentials file.
+    - early: bool. If True, stop processing when an already seen email is encountered (default True).
+    - rerun: bool. If True, reprocess emails even if they have been seen before (default False).
+    - email: Optional[str]. The specific email address to check (overrides config).
+  - Fetches emails using `eaia.gmail.fetch_group_emails`.
+  - Interacts with the LangGraph SDK client to create/update threads and create runs with the fetched email data.
+  - Prints key email fields (From, To, Subject, Sent, Content) to the console for debugging. Uses BeautifulSoup to parse HTML content and prints plain text.
+
+### Usage
+- Place all secrets/API keys in .env
+- No need to manually load env vars in scripts; config.py does it at import time.
+
+### Schemas
+- All schema models (RespondTo, ResponseEmailDraft, NewEmailDraft, etc.) use pydantic.BaseModel and pydantic.Field (V2).
+- RespondTo(logic: str = "", response: Literal["no", "email", "notify", "question"] = "no")
+  - logic: str. Explanation of response logic.
+  - response: Literal["no", "email", "notify", "question"]. What action to take.
+- OPENAI_API_KEY: string, required for OpenAI API access
+- ANTHROPIC_API_KEY: string, required for Anthropic API access
+
+### Algorithm Summaries
+- Env loading: Uses python-dotenv to autoload .env
+- Config loading: Uses config.yaml or passed dict
+- All schema validation uses Pydantic V2
+
+### Areas to Add Value
+- Add more robust error handling for missing env vars
+- Modularize and document all major pipeline steps
+- Expand suggestion/fact-check/fine-tuning pipeline
+
+(Keep updating as new methods/classes are added)

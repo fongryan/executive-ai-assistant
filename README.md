@@ -27,11 +27,21 @@ Table of contents
 1. Fork and then clone this repo. Note: make sure to fork it first, as in order to deploy this you will need your own repo.
 2. Create a Python virtualenv and activate it (e.g. `pyenv virtualenv 3.11.1 eaia`, `pyenv activate eaia`)
 3. Run `pip install -e .` to install dependencies and the package
+4. Create a `.env` file in the project root and add your environment variables, e.g.:
+   ```
+   OPENAI_API_KEY=sk-...
+   ANTHROPIC_API_KEY=...
+   LANGSMITH_API_KEY=...
+   ```
+   The application will automatically load environment variables from `.env` using `python-dotenv`.
 
 ### Set up credentials
 
-1. Export OpenAI API key (`export OPENAI_API_KEY=...`)
-2. Export Anthropic API key (`export ANTHROPIC_API_KEY=...`)
+1. Add your OpenAI API key to the `.env` file as `OPENAI_API_KEY=...`
+2. Add your Anthropic API key to the `.env` file as `ANTHROPIC_API_KEY=...`
+3. Add your LangSmith API key to the `.env` file as `LANGSMITH_API_KEY=...`
+
+Environment variables in `.env` are loaded automatically at runtime.
 3. Enable Google
    1. [Enable the API](https://developers.google.com/gmail/api/quickstart/python#enable_the_api)
       - Enable Gmail API if not already by clicking the blue button `Enable the API`
@@ -62,12 +72,37 @@ The configuration for EAIA can be found in `eaia/main/config.yaml`. Every key in
 - `triage_notify`: Guidelines for when user should be notified of emails (but EAIA should not attempt to draft a response)
 - `triage_email`: Guidelines for when EAIA should try to draft a response to an email
 
+## Setup
+
+1. Clone the repository.
+2. Create a virtual environment (recommended):
+   ```bash
+   python3.12 -m venv venv
+   ```
+3. **Activate the virtual environment:**
+   ```bash
+   source venv/bin/activate 
+   ```
+   *(**Important:** Ensure the venv is active before proceeding)*
+
+4. Install dependencies:
+   ```bash
+   # Make sure your venv is active!
+   python3.12 -m pip install -r requirements.txt
+   ```
+5. Set up environment variables (e.g., create a `.env` file).
+
 ## Run locally
 
 You can run EAIA locally.
 This is useful for testing it out, but when wanting to use it for real you will need to have it always running (to run the cron job to check for emails).
 See [this section](#run-in-production--langgraph-cloud-) for instructions on how to run in production (on LangGraph Cloud)
 
+### Troubleshooting
+
+**Q: I get an error about `The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable`.**
+
+A: Make sure you have a `.env` file in your project root with a valid `OPENAI_API_KEY`, and that you have installed `python-dotenv`. The app loads `.env` automatically. If running in a deployed environment, ensure the env variable is set in your deployment config.
 ### Set up EAIA locally
 
 1. Install development server `pip install -U "langgraph-cli[inmem]"`
@@ -85,6 +120,7 @@ python scripts/run_ingest.py --minutes-since 120 --rerun 1 --early 0
 
 This will ingest all emails in the last 120 minutes (`--minutes-since`). It will NOT break early if it sees an email it already saw (`--early 0`) and it will
 rerun ones it has seen before (`--rerun 1`). It will run against the local instance we have running.
+(Note: This script will now print key fields from the fetched email, including parsed text content, to the console for easier debugging.)
 
 ### Set up Agent Inbox with Local EAIA
 
@@ -137,6 +173,7 @@ python scripts/run_ingest.py --minutes-since 120 --rerun 1 --early 0 --url ${LAN
 
 This will ingest all emails in the last 120 minutes (`--minutes-since`). It will NOT break early if it sees an email it already saw (`--early 0`) and it will
 rerun ones it has seen before (`--rerun 1`). It will run against the prod instance we have running (`--url ${LANGGRAPH-CLOUD-URL}`)
+(Note: This script will now print key fields from the fetched email, including parsed text content, to the console for easier debugging.)
 
 ### Set up Agent Inbox with LangGraph Cloud EAIA
 

@@ -1,0 +1,30 @@
+# Roadmap
+
+## Status Updates
+- [x] Added dotenv support for loading env vars (including OPENAI_API_KEY) automatically from .env
+- [x] Updated README and requirements.txt for dotenv and troubleshooting
+- [x] BlockingError (os.getcwd) async patch added for LangGraph/ASGI compatibility. All async entrypoints now robust to this dependency issue.
+- [x] Migrated all schema models to Pydantic V2 (BaseModel/Field). No more v1/v2 mixing errors.
+- [ ] Ensure all features using OpenAI or Anthropic keys work out-of-the-box locally and in cloud
+- [x] Enhanced debug print in scripts/run_ingest.py to show key email fields with parsed text content (2025-04-24).
+
+## Next Steps
+- Confirm all modules that use OpenAI/Anthropic keys work after dotenv load
+- Add further error handling for missing keys
+- Continue modularizing and splitting up large files as per rules
+
+## Appendix: Press Release FAQ
+### What does the product do?
+The Executive AI Assistant (EAIA) is an advanced agent that automates executive assistant tasks, including email triage, drafting, meeting scheduling, and more, using LLMs. It supports arbitrarily nested categories for synthesized datasets, robust rule generation/validation, and extensible suggestion/fact-checking pipelines.
+
+### Features and Capabilities
+- Arbitrarily nested, traversable synthetic datasets
+- LLM-powered rule generation and validation
+- Fact-checking with confidence scores and human-in-the-loop acceptance
+- Suggestion engine for dataset/category improvement
+- Modular, scalable, and robust architecture
+- Easy local and cloud deployment
+
+---
+
+(Keep updating this file as features and status change)

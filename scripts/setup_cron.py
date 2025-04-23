@@ -1,4 +1,8 @@
 """Set up a cron job that runs every 10 minutes to check for emails"""
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 import argparse
 import asyncio
 from typing import Optional
