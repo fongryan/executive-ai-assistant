@@ -1,0 +1,40 @@
+# .docs
+
+## Method Signatures & Classes
+
+### src/app.py
+- Loads environment variables from `.env` using `python-dotenv` at startup:
+  ```python
+  from dotenv import load_dotenv
+  load_dotenv()
+  folder_id = os.getenv("FOLDER_ID", "root")
+  ```
+- `GoogleDriveAPIWrapper`: Handles Google Drive API authentication and search.
+- `GoogleDriveSearchTool`: Tool for searching Google Drive, used by agent.
+- `GoogleDriveLoader`: Loads documents from Google Drive for ingestion/analysis.
+- `initialize_agent`: Creates an LLM agent with tools and configuration.
+- `OpenAI`: LLM wrapper for agent reasoning.
+- All tools are now instantiated directly (not via load_tools or string names).
+Update as the codebase grows.
+
+## Schemas
+- Category: `{ name: str, description: str, rules: list, subcategories: list }`
+- Suggestion: `{ suggestion: str, reason: str, implemented: bool }`
+- FactCheck: `{ statement: str, confidence: float, accepted: bool }`
+- `.env`: Key-value pairs for environment variables (e.g., `FOLDER_ID`, `GOOGLE_ACCOUNT_FILE`).
+
+## Algorithm Summaries
+- Loads environment variables at app start so all configuration is managed via `.env`.
+- Uses `FOLDER_ID` from environment, defaulting to `root` if not set.
+
+## Areas to Add Value / Profit
+- Modularize agent and synthesis logic for extensibility and analytics.
+- LLM-powered suggestions and rule validation.
+- Integration with external sources (Google Drive, etc.).
+- Fact-checking and document creation pipeline.
+- Refactor logic in `app.py` into reusable functions and modules as complexity increases.
+- Add more environment-driven configuration options.
+- Implement error handling for missing/invalid env vars.
+- Expand documentation as new features are added.
+
+# END .docs

@@ -1,0 +1,42 @@
+# .rules
+
+## Project Structure
+- src/app.py: Main app logic for Google Drive search and document loading. Loads environment variables from .env using python-dotenv.
+- requirements.txt: Lists all Python dependencies, alphabetized. Now includes python-dotenv for env var support.
+- .env: User-defined environment variables. FOLDER_ID is used by default in app.py.
+
+## Method Signatures & Documentation
+- `GoogleDriveAPIWrapper(folder_id: str, num_results: int, template: str, credentials_path: str)`
+- `GoogleDriveSearchTool(api_wrapper: GoogleDriveAPIWrapper)`
+- `initialize_agent(tools: list, llm, agent: AgentType)`
+- `OpenAI(temperature: float)`
+- All tools are now instantiated directly (not via load_tools or string names).
+Update this section as more functions/classes are added.
+
+## TODOs
+- Refactor app.py into smaller, more modular files as logic grows.
+- Modularize synthesis loop and agent logic.
+- Add README.md, .roadmap, and .docs for documentation and planning.
+- Ensure code coverage for all success paths.
+- Keep requirements.txt alphabetized and up to date.
+
+## Tenets & Features
+- Always load environment variables from .env for configuration (FOLDER_ID, GOOGLE_ACCOUNT_FILE, etc).
+- Alphabetize requirements.txt and keep dependencies up to date.
+- All code must be Python 3.12 compatible.
+- Document all changes and method signatures here and in .docs.
+- Ensure every change is reflected in .rules, .docs, .roadmap, and README.md.
+- Remove unnecessary code and keep codebase clean.
+- Synthesis loop and agent logic must be modular, robust, and extensible.
+- Fact-checking, suggestion, and rule-generation features must be documented and tracked.
+
+## File Structure
+- .rules: This file. Project rules, structure, method docs, and TODOs.
+- .env: Environment variables for the app.
+- requirements.txt: Python dependencies.
+- src/app.py: Main application logic.
+
+## Environment Variables
+- FOLDER_ID: Google Drive folder to search (default: "root").
+
+# END .rules

@@ -1,0 +1,11 @@
+google-api-python-client==2.167.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.2
+langchain-community==0.3.22
+langchain-googledrive==0.3.35
+langchain_openai==0.3.14
+python-dotenv
+
+langgraph
+langchain
+google-auth

@@ -1,0 +1,36 @@
+# .roadmap
+
+## Current Status
+- [x] App loads environment variables from `.env` using `python-dotenv` (Step 2).
+- [x] Fixed LangChain v0.2+ import/tooling error (google-drive-search not recognized)
+- [x] Now using direct instantiation of GoogleDriveSearchTool (not load_tools)
+
+- [ ] Refactor `app.py` into smaller, modular files as logic grows.
+- [ ] Add `README.md` with setup, run, and environment instructions.
+- [ ] Add tests and ensure code coverage for all features.
+- [ ] Expand documentation in `.docs` and `.rules` as new features are added.
+
+## PR FAQ (Appendix)
+### What does the product do?
+- Synthesizes and analyzes Google Drive documents using a modular, extensible Python app.
+- Loads configuration and secrets from `.env` for flexibility and security.
+
+### Features
+- Loads Google Drive folder ID from `.env` (via `FOLDER_ID`), defaulting to `root`.
+- Uses LangChain v0.2+ and Google Drive integrations for document search and analysis.
+- Direct instantiation of tools, robust modular codebase.
+- Designed for extensibility, modularity, and robust configuration.
+
+### Capabilities
+- Arbitrarily nested category support for dataset synthesis (planned).
+- Rule generation, validation, and suggestion implementation (planned).
+- Fact-checking and document creation pipeline (planned).
+
+## Plan
+1. Modularize app logic as it grows (split files, clean imports).
+2. Add robust error handling and configuration validation.
+3. Expand dataset synthesis and suggestion logic.
+4. Implement rule and fact-checking features.
+5. Maintain up-to-date documentation in `.rules`, `.docs`, `.roadmap`, and `README.md`.
+
+# END .roadmap
